@@ -1,0 +1,18 @@
+{
+  "login": {
+    "title": "Войти",
+    "username": "Ваш никнейм"
+  },
+  "signup": {
+    "title": "Зарегистрироваться",
+    "username": "Имя пользователя"
+  },
+  "requiredField": "Обязательное поле",
+  "minCount": "Должно быть минимум {{count}} символов",
+  "haveNotAccount": "Еще не зарегистрировались?",
+  "haveAccount": "Уже есть акккаунт?",
+  "password": "Пароль",
+  "confirmPassword": "Подтвердите пароль",
+  "notMatchWithPassword": "Не совпадает с полем пароля",
+  "logOut": "Выйти"
+}
