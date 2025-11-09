@@ -1,15 +1,13 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-import { fetchBaseQuery } from '@reduxjs/toolkit/query';
+import { api } from './api';
 
-export const signupAPI = createApi({
-  reducerPath: 'signupAPI',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/signup' }),
+const signupAPI = api.injectEndpoints({
   endpoints: (builder) => ({
     signUp: builder.mutation({
       query: (data) => ({
         headers: {
           'Content-Type': 'application/json',
         },
+        url: '/signup',
         method: 'POST',
         body: data,
       }),

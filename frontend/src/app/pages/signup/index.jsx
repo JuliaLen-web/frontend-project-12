@@ -72,7 +72,7 @@ const SignupPage = () => {
               required
             />
             <Form.Label htmlFor="username" className="form-label">{t('signup.username')}</Form.Label>
-            {formik.errors.username && <p>{formik.errors.username}</p>}
+            {formik.errors.username && <p className="text-danger">{formik.errors.username}</p>}
           </Form.Group>
 
           <Form.Group className="form-floating">
@@ -88,7 +88,7 @@ const SignupPage = () => {
               required
             />
             <Form.Label htmlFor="password">{t('password')}</Form.Label>
-            {formik.errors.password && <p>{formik.errors.password}</p>}
+            {formik.errors.password && <p className="text-danger">{formik.errors.password}</p>}
           </Form.Group>
           <Form.Group className="form-floating">
             <Form.Control
@@ -103,9 +103,9 @@ const SignupPage = () => {
               required
             />
             <Form.Label htmlFor="confirmPassword">{t('confirmPassword')}</Form.Label>
-            {formik.errors.confirmPassword && <p>{formik.errors.confirmPassword}</p>}
+            {formik.errors.confirmPassword && <p className="text-danger">{formik.errors.confirmPassword}</p>}
           </Form.Group>
-          {hasSignupError && signupError.data.message && <span>{signupError.data.message}</span>}
+          {hasSignupError && signupError.data.message && <span className="text-danger">{signupError.data.message}</span>}
 
           <Button type="submit" className="btn btn-primary" disabled={isLoading || !formik.isValid}>{t('signup.title')}</Button>
         </Form>
