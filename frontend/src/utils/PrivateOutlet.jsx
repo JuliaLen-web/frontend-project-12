@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 export const PrivateOutlet = () => {
   const auth = useAuth();
 
-  return auth.user ? (
+  return auth.user || auth.token ? (
     <Outlet />
   ) : (
     <Navigate to="/login" />

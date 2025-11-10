@@ -4,15 +4,18 @@ const loginAPI = api.injectEndpoints({
   endpoints: (builder) => ({
     logIn: builder.mutation({
       query: (data) => ({
-        headers: {
-          'Content-Type': 'application/json',
-        },
         url: '/login',
         method: 'POST',
         body: data,
       }),
     }),
+    // checkUser: builder.query({
+    //   query: () => ({
+    //     url: '/login',
+    //     method: 'GET',
+    //   }),
+    // }),
   }),
 });
 
-export const { useLogInMutation } = loginAPI;
+export const { useLogInMutation, useCheckUserQuery } = loginAPI;

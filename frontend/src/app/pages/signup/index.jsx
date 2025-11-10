@@ -42,7 +42,6 @@ const SignupPage = () => {
   useEffect(() => {
     if (newUser) {
       dispatch(setCredentials(newUser));
-      localStorage.setItem('userToken', newUser.token);
       navigation('/');
     }
   }, [newUser]);
@@ -55,7 +54,7 @@ const SignupPage = () => {
 
   return (
     <Layout>
-      <div className="card py-3 px-4">
+      <div className="card py-3 px-4 col-12 col-lg-4">
         <h1 className="text-center mb-4">{t('signup.title')}</h1>
         <Form onSubmit={formik.handleSubmit} className="d-flex flex-column gap-3">
           <Form.Group className="form-floating">

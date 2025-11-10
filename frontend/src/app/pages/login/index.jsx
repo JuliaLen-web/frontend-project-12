@@ -4,7 +4,7 @@ import { Button, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Bounce, toast } from 'react-toastify';
 import { setCredentials } from '../../slices/authSlice';
 import { useLogInMutation } from '../../services/LoginService';
@@ -40,10 +40,9 @@ const LoginPage = () => {
   useEffect(() => {
     if (user) {
       dispatch(setCredentials(user));
-      localStorage.setItem('userToken', user.token);
       navigate('/');
     }
-  }, [user]);
+  }, [user, dispatch]);
 
   useEffect(() => {
     if (hasLoginError) {
@@ -64,7 +63,7 @@ const LoginPage = () => {
 
   return (
     <Layout>
-      <div className="card py-3 px-4">
+      <div className="card py-3 px-4 col-12 col-lg-4">
         <h1 className="text-center mb-4">{t('login.title')}</h1>
         <Form onSubmit={formik.handleSubmit} className="d-flex flex-column gap-3">
           <Form.Group className="form-floating">
