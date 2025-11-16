@@ -1,18 +1,27 @@
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { ArrowRightSquare, PlusSquare } from 'react-bootstrap-icons';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
+import { useFormik } from 'formik';
 import Layout from '../../components/Layout';
 import { useGetChannelsQuery } from '../../services/ChannelsService';
-import { saveChannels } from '../../slices/chatSlice';
+import { saveChannels, saveMessages } from '../../slices/chatSlice';
+import { useAddMessageMutation, useGetMessagesQuery } from '../../services/MessageService';
+import { useAuth } from '../../../hooks/useAuth';
 
 const ChatPage = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const [activeChannel, setActiveChannel] = useState(null);
+  const [channelMessages, setChannelMessages] = useState(null);
+  const auth = useAuth();
+  const inputMessage = useRef();
+  console.log(auth.user);
 
-  const { data: channels, error, isLoading } = useGetChannelsQuery();
+  const { data: channels, } = useGetChannelsQuery();
+  const { data: messages, refetch } = useGetMessagesQuery();
+  const [addMessage, { isError: hasAddingMessageError }] = useAddMessageMutation();
 
   useEffect(() => {
     if (channels) {
@@ -21,9 +30,32 @@ const ChatPage = () => {
     }
   }, [channels]);
 
+  useEffect(() => {
+    if (messages) {
+      dispatch(saveMessages(messages));
+    }
+    if (activeChannel && messages) {
+      setChannelMessages(messages.filter((message) => message.channelId === activeChannel.id));
+      console.log(activeChannel, messages, messages.filter((message) => message.channelId === activeChannel));
+    }
+  }, [messages, activeChannel]);
+
   const handlerActiveChannel = (channel) => {
     setActiveChannel(channel);
   };
+
+  const formik = useFormik({
+    initialValues: {
+      message: '',
+    },
+    onSubmit: (values) => {
+      const messageData = { body: values.message, channelId: activeChannel.id, username: auth.user };
+      addMessage(messageData);
+      refetch();
+      values.message = '';
+      inputMessage.current.focus();
+    },
+  });
 
   return (
     <Layout>
@@ -61,23 +93,40 @@ const ChatPage = () => {
                     {activeChannel.name}
                   </b>
                 </p>
-                <span className="text-muted">0 сообщений</span>
+                {channelMessages
+                  && (
+                  <span className="text-muted">
+                    {channelMessages.length}
+                    {' '}
+                    {t('chat.messages')}
+                  </span>
+                  )}
               </div>
               )}
 
-              <div id="messages-box" className="chat-messages overflow-auto px-5 " />
+              <div id="messages-box" className="chat-messages overflow-auto px-5 ">
+                {channelMessages && channelMessages.map((message) => (
+                  <div className="text-break mb-2">
+                    <b>{message.username}</b>
+                    :
+                    {message.body}
+                  </div>
+                ))}
+              </div>
 
               <div className="mt-auto px-5 py-3">
-                <form noValidate="" className="py-1 border rounded-2">
+                <form onSubmit={formik.handleSubmit} noValidate="" className="py-1 border rounded-2">
                   <div className="input-group has-validation">
                     <input
-                      name="body"
+                      name="message"
                       aria-label="Новое сообщение"
                       placeholder="Введите сообщение..."
                       className="border-0 p-0 ps-2 form-control"
-                      value=""
+                      onChange={formik.handleChange}
+                      value={formik.values.message}
+                      ref={inputMessage}
                     />
-                    <button type="submit" disabled="" className="btn btn-group-vertical">
+                    <button type="submit" disabled={formik.values.message.trim() === ''} className="btn btn-group-vertical">
                       <ArrowRightSquare />
                       <span className="visually-hidden">Отправить</span>
                     </button>

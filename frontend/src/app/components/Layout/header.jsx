@@ -18,7 +18,7 @@ const Header = () => {
       <nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-white w-100">
         <div className="container">
           <a className="navbar-brand" href="/">Chat</a>
-          {(auth.user || auth.token) && <Button onClick={logOutHandler}>{t('logOut')}</Button>}
+          {(auth.user) && <Button onClick={logOutHandler}>{t('logOut')}</Button>}
         </div>
       </nav>
     </header>

@@ -9,12 +9,6 @@ const loginAPI = api.injectEndpoints({
         body: data,
       }),
     }),
-    // checkUser: builder.query({
-    //   query: () => ({
-    //     url: '/login',
-    //     method: 'GET',
-    //   }),
-    // }),
   }),
 });
 
