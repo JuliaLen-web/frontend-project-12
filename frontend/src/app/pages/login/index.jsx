@@ -4,8 +4,8 @@ import { Button, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { Bounce, toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 import { setCredentials } from '../../slices/authSlice';
 import { useLogInMutation } from '../../services/LoginService';
 import Layout from '../../components/Layout';
@@ -25,7 +25,7 @@ const LoginPage = () => {
 
   const validationSchema = yup.object().shape({
     username: yup.string().trim().required(t('requiredField')),
-    password: yup.string().required(t('requiredField')).min(5, t('minCount', { count: 5 })),
+    password: yup.string().required(t('requiredField')),
   });
 
   const formik = useFormik({
@@ -47,17 +47,7 @@ const LoginPage = () => {
   useEffect(() => {
     if (hasLoginError) {
       inputRef.current.select();
-      toast.error(loginError.data.message, {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      });
+      toast.error(loginError.data.message);
     }
   }, [hasLoginError]);
 

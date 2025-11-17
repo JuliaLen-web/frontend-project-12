@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 import { useSignUpMutation } from '../../services/SignupService';
 import { setCredentials } from '../../slices/authSlice';
 import Layout from '../../components/Layout';
@@ -20,8 +21,9 @@ const SignupPage = () => {
   }] = useSignUpMutation();
 
   const validationSchema = yup.object().shape({
-    username: yup.string().trim().required(t('requiredField')),
-    password: yup.string().required(t('requiredField')).min(5, t('minCount', { count: 5 })),
+    username: yup.string().trim().required(t('requiredField')).min(3, t('minCount', { count: 3 }))
+      .max(20),
+    password: yup.string().required(t('requiredField')).min(6, t('minCount', { count: 6 })),
     confirmPassword: yup.string()
       .oneOf(
         [yup.ref('password'), null],
@@ -49,6 +51,7 @@ const SignupPage = () => {
   useEffect(() => {
     if (hasSignupError) {
       inputRef.current.select();
+      toast.error(signupError.data.message);
     }
   }, [hasSignupError]);
 

@@ -16,15 +16,15 @@ const channelAPI = api.injectEndpoints({
       }),
     }),
     editChannel: builder.mutation({
-      query: (editedChannel, id) => ({
-        url: `/channels:${id}`,
+      query: ({ editedChannel, id }) => ({
+        url: `/channels/${id}`,
         method: 'PATCH',
         body: editedChannel,
       }),
     }),
     removeChannel: builder.mutation({
-      query: (newChannel, id) => ({
-        url: `/channels:${id}`,
+      query: (id) => ({
+        url: `/channels/${id}`,
         method: 'DELETE',
       }),
     }),

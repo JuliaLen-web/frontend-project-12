@@ -16,6 +16,17 @@
   "notMatchWithPassword": "Не совпадает с полем пароля",
   "logOut": "Выйти",
   "chat": {
-    "messages": "сообщений"
+    "channels": "Каналы",
+    "messages": "сообщений",
+    "minMax": "От 3 до 20 символов",
+    "renameChannel": "Переименовать канал",
+    "removeChannel": "Удалить канал",
+    "addChannel": "Добавить канал",
+    "create": "Создать",
+    "delete": "Удалить",
+    "rename": "Переименовать",
+    "channelCreated": "Канал создан",
+    "channelDeleted": "Канал удален",
+    "channelRenamed": "Канал переименован"
   }
 }
