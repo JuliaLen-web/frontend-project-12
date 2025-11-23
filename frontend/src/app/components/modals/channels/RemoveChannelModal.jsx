@@ -1,23 +1,21 @@
 import { FormGroup, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import { useGetChannelsQuery, useRemoveChannelMutation } from '../../../services/ChannelsService';
+import { useRemoveChannelMutation } from '../../../services/ChannelsService';
 
 const removeChannelModal = (props) => {
   const { onHide, modalInfo } = props;
   const { t } = useTranslation();
-  const { refetch: refetchChannels } = useGetChannelsQuery();
-  const [removeChannel, { error, isError, isLoading }] = useRemoveChannelMutation();
+  const [removeChannel, { error, isLoading }] = useRemoveChannelMutation();
 
-  const handlerClick = (e) => {
+  const handlerClick = async (e) => {
     e.preventDefault();
-    removeChannel(modalInfo.item.id);
-    refetchChannels();
-    if (isError) {
-      toast.error(error.data.message);
-    } else {
-      toast.success(t('chat.channelDeleted'));
+    try {
+      const removedChannel = await removeChannel(modalInfo.item.id);
+      toast.success(`${removedChannel.name} ${t('chat.channelDeleted')}`);
       onHide();
+    } catch (e) {
+      toast.error(error.data.message);
     }
   };
 

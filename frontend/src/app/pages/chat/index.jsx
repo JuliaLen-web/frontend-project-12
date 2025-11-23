@@ -1,6 +1,6 @@
 import Layout from '../../components/Layout';
-import ChannelsSidebar from './ChannelsSidebar';
-import MessageBox from './MessageBox';
+import ChannelsSidebar from './channels/ChannelsSidebar';
+import MessageBox from './messages/MessageBox';
 
 const ChatPage = () => (
   <Layout>

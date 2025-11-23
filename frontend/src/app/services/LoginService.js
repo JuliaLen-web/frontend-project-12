@@ -12,4 +12,4 @@ const loginAPI = api.injectEndpoints({
   }),
 });
 
-export const { useLogInMutation, useCheckUserQuery } = loginAPI;
+export const { useLogInMutation } = loginAPI;

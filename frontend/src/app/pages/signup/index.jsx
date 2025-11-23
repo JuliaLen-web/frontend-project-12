@@ -50,7 +50,7 @@ const SignupPage = () => {
 
   useEffect(() => {
     if (hasSignupError) {
-      inputRef.current.select();
+      inputRef.current?.select();
       toast.error(signupError.data.message);
     }
   }, [hasSignupError]);

@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
@@ -9,17 +9,19 @@ import { toast } from 'react-toastify';
 import { setCredentials } from '../../slices/authSlice';
 import { useLogInMutation } from '../../services/LoginService';
 import Layout from '../../components/Layout';
+import { useAuth } from '../../../hooks/useAuth';
 
 const LoginPage = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const inputRef = useRef();
+  const auth = useAuth();
 
   const [
     logIn,
     {
-      isError: hasLoginError, error: loginError, isLoading: isLoadingLogin, data: user,
+      isError: hasLoginError, error: loginError, isLoading: isLoadingLogin,
     },
   ] = useLogInMutation();
 
@@ -34,22 +36,19 @@ const LoginPage = () => {
       password: '',
     },
     validationSchema,
-    onSubmit: (values) => logIn(values),
+    onSubmit: async (values) => {
+      try {
+        const userInfo = await logIn(values).unwrap();
+        dispatch(setCredentials(userInfo));
+        navigate('/');
+      } catch (e) {
+        toast.error(loginError.data.message);
+        inputRef.current?.select();
+      }
+    },
   });
 
-  useEffect(() => {
-    if (user) {
-      dispatch(setCredentials(user));
-      navigate('/');
-    }
-  }, [user, dispatch]);
-
-  useEffect(() => {
-    if (hasLoginError) {
-      inputRef.current.select();
-      toast.error(loginError.data.message);
-    }
-  }, [hasLoginError]);
+  if (auth.user) return <Navigate to="/" replace />;
 
   return (
     <Layout>
@@ -66,7 +65,7 @@ const LoginPage = () => {
               placeholder="Username"
               className="form-control"
               ref={inputRef}
-              isInvalid={hasLoginError || formik.errors.username}
+              isInvalid={formik.errors.username}
               required
             />
             <Form.Label htmlFor="username" className="form-label">{t('login.username')}</Form.Label>
@@ -84,7 +83,7 @@ const LoginPage = () => {
               value={formik.values.password}
               placeholder="Password"
               className="form-control"
-              isInvalid={hasLoginError || formik.errors.password}
+              isInvalid={formik.errors.password}
               required
             />
             <Form.Label htmlFor="password">{t('password')}</Form.Label>

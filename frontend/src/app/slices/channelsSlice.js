@@ -3,19 +3,20 @@ import { createSlice } from '@reduxjs/toolkit';
 const channelsSlice = createSlice({
   name: 'channels',
   initialState: {
-    channels: [],
     activeChannel: null,
   },
   reducers: {
-    saveChannels(state, { payload }) {
-      state.channels = payload;
-    },
     setActiveChannel(state, { payload }) {
       state.activeChannel = payload;
     },
   },
+  selectors: {
+    activeChannel: (state) => state.activeChannel,
+  },
 });
 
-export const { saveChannels, setActiveChannel } = channelsSlice.actions;
+export const { setActiveChannel } = channelsSlice.actions;
 
 export default channelsSlice.reducer;
+
+export const selectorActiveChannel = (state) => state.channels.activeChannel;

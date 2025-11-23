@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
-import { saveChannels, setActiveChannel } from '../../slices/channelsSlice';
-import { useGetChannelsQuery } from '../../services/ChannelsService';
-import getModal from '../../components/modals/channels/getModal';
+import { selectorActiveChannel, setActiveChannel } from '../../../slices/channelsSlice';
+import { useGetChannelsQuery } from '../../../services/ChannelsService';
+import getModal from '../../../components/modals/channels/getModal';
 
 const renderModal = ({ modalInfo, hideModal }) => {
   if (!modalInfo.type) {
@@ -21,22 +21,17 @@ const ChannelsSidebar = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { data: channels } = useGetChannelsQuery();
-  const activeChannel = useSelector((state) => state.channels.activeChannel);
+  const activeChannel = useSelector(selectorActiveChannel);
 
   const [modalInfo, setModalInfo] = useState({ type: null, item: null });
   const hideModal = () => setModalInfo({ type: null, item: null });
   const showModal = (type, item = null) => setModalInfo({ type, item });
 
   useEffect(() => {
-    if (channels) {
-      dispatch(saveChannels(channels));
+    if (channels && channels.length) {
       dispatch(setActiveChannel(channels[0]));
     }
-  }, [channels]);
-
-  const handlerActiveChannel = (channel) => {
-    dispatch(setActiveChannel(channel));
-  };
+  }, [channels?.length > 0]);
 
   return (
     <>
@@ -52,7 +47,7 @@ const ChannelsSidebar = () => {
           && (
             <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
               {channels.map((channel) => (
-                <li key={channel.id} className="nav-item w-100" onClick={() => handlerActiveChannel(channel)}>
+                <li key={channel.id} className="nav-item w-100" onClick={() => dispatch(setActiveChannel(channel))}>
                   {channel.removable
                     ? (
                       <Dropdown as={ButtonGroup} className="d-flex">

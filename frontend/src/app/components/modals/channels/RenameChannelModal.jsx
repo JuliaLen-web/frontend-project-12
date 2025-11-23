@@ -1,20 +1,15 @@
 import { FormControl, FormGroup, Modal } from 'react-bootstrap';
 import { useFormik } from 'formik';
-import { useEffect, useRef } from 'react';
-import uniqueId from 'lodash.uniqueid';
-import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { setActiveChannel } from '../../../slices/channelsSlice';
-import { useAddChannelMutation, useGetChannelsQuery } from '../../../services/ChannelsService';
+import { useEditChannelMutation } from '../../../services/ChannelsService';
 
-const addChannelModal = (props) => {
-  const { onHide } = props;
+const renameChannelModal = (props) => {
+  const { onHide, modalInfo } = props;
   const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const { refetch: refetchChannels } = useGetChannelsQuery();
-  const [addChannel, { error, isError, isLoading }] = useAddChannelMutation();
+  const [editChannel, { error, isLoading }] = useEditChannelMutation();
 
   const validationSchema = yup.object().shape({
     body: yup.string().trim().required(t('requiredField')).min(3, t('chat.minMax'))
@@ -22,31 +17,30 @@ const addChannelModal = (props) => {
   });
 
   const f = useFormik({
-    initialValues: { body: '' },
+    enableReinitialize: true,
+    initialValues: { body: modalInfo.item.name },
     validationSchema,
-    onSubmit: (values) => {
-      const item = { id: uniqueId(), name: values.body, removable: true };
-      addChannel(item);
-      refetchChannels();
-      dispatch(setActiveChannel(item));
-      if (isError) {
-        toast.error(error.data.message);
-      } else {
-        toast.success(t('chat.channelCreated'));
+    onSubmit: async (values) => {
+      try {
+        const editedChannel = await editChannel({ name: values.body, id: modalInfo.item.id });
+        toast.success(`${editedChannel.name} ${t('chat.channelRenamed')}`);
         onHide();
+      } catch (e) {
+        toast.error(error.data.message);
       }
     },
   });
 
   const inputRef = useRef();
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current?.focus();
+    inputRef.current?.select();
   }, []);
 
   return (
     <Modal show>
       <Modal.Header closeButton onHide={onHide}>
-        <Modal.Title>{t('chat.addChannel')}</Modal.Title>
+        <Modal.Title>{t('chat.renameChannel')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -60,17 +54,17 @@ const addChannelModal = (props) => {
               value={f.values.body}
               className="form-control mb-3"
               ref={inputRef}
-              isInvalid={isError || f.errors.body}
+              isInvalid={f.errors.body}
               autoComplete="off"
             />
             {f.errors.body && (
               <p className="text-danger">{f.errors.body}</p>
             )}
           </FormGroup>
-          <input className="btn btn-primary" type="submit" disabled={isLoading} value={t('chat.create')} />
+          <input className="btn btn-primary" type="submit" disabled={isLoading} value={t('chat.rename')} />
         </form>
       </Modal.Body>
     </Modal>
   );
 };
-export default addChannelModal;
+export default renameChannelModal;
