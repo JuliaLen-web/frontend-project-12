@@ -25,9 +25,9 @@ const addChannelModal = (props) => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const newChannel = await addChannel({ id: uniqueId(), name: values.body, removable: true });
+        const { data: newChannel} = await addChannel({ id: uniqueId(), name: values.body, removable: true });
         dispatch(setActiveChannel(newChannel.data));
-        toast.success(t('chat.channelCreated'));
+        toast.success(`${newChannel.name} ${t('chat.channelCreated')}`);
         onHide();
       } catch (e) {
         toast.error(error.data.message);

@@ -22,8 +22,8 @@ const renameChannelModal = (props) => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const editedChannel = await editChannel({ name: values.body, id: modalInfo.item.id });
-        toast.success(`${editedChannel.name} ${t('chat.channelRenamed')}`);
+        const { data: editedChannel } = await editChannel({ name: values.body, id: modalInfo.item.id });
+        toast.success(`${modalInfo.item.name} ${t('chat.channelRenamed')} ${editedChannel.name}`);
         onHide();
       } catch (e) {
         toast.error(error.data.message);

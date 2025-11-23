@@ -11,8 +11,8 @@ const removeChannelModal = (props) => {
   const handlerClick = async (e) => {
     e.preventDefault();
     try {
-      const removedChannel = await removeChannel(modalInfo.item.id);
-      toast.success(`${removedChannel.name} ${t('chat.channelDeleted')}`);
+      removeChannel(modalInfo.item.id);
+      toast.success(`${modalInfo.item.name} ${t('chat.channelDeleted')}`);
       onHide();
     } catch (e) {
       toast.error(error.data.message);
