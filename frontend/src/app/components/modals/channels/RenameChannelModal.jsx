@@ -1,4 +1,6 @@
-import { FormControl, FormGroup, Modal } from 'react-bootstrap';
+import {
+  Button, FormControl, FormGroup, Modal,
+} from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
@@ -61,7 +63,10 @@ const renameChannelModal = (props) => {
               <p className="text-danger">{f.errors.body}</p>
             )}
           </FormGroup>
-          <input className="btn btn-primary" type="submit" disabled={isLoading} value={t('chat.rename')} />
+          <FormGroup className="d-flex gap-2 justify-content-end">
+            <Button type="button" className="btn btn-secondary" onClick={onHide}>{t('cancel')}</Button>
+            <input className="btn btn-primary" type="submit" disabled={isLoading} value={t('chat.rename')} />
+          </FormGroup>
         </form>
       </Modal.Body>
     </Modal>

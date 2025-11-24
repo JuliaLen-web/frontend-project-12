@@ -1,4 +1,6 @@
-import { FormControl, FormGroup, Modal } from 'react-bootstrap';
+import {
+  Button, FormControl, FormGroup, Modal,
+} from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { useEffect, useRef } from 'react';
 import uniqueId from 'lodash.uniqueid';
@@ -25,7 +27,7 @@ const addChannelModal = (props) => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const { data: newChannel} = await addChannel({ id: uniqueId(), name: values.body, removable: true });
+        const { data: newChannel } = await addChannel({ id: uniqueId(), name: values.body, removable: true });
         dispatch(setActiveChannel(newChannel.data));
         toast.success(`${newChannel.name} ${t('chat.channelCreated')}`);
         onHide();
@@ -64,7 +66,10 @@ const addChannelModal = (props) => {
               <p className="text-danger">{formik.errors.body}</p>
             )}
           </FormGroup>
-          <input className="btn btn-primary" type="submit" disabled={isLoading} value={t('chat.create')} />
+          <FormGroup className="d-flex gap-2 justify-content-end">
+            <Button type="button" className="btn btn-secondary" onClick={onHide}>{t('cancel')}</Button>
+            <input className="btn btn-primary" type="submit" disabled={isLoading} value={t('chat.create')} />
+          </FormGroup>
         </form>
       </Modal.Body>
     </Modal>

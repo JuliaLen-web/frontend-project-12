@@ -15,6 +15,7 @@
   "confirmPassword": "Подтвердите пароль",
   "notMatchWithPassword": "Не совпадает с полем пароля",
   "logOut": "Выйти",
+  "cancel": "Отменить",
   "chat": {
     "channels": "Каналы",
     "messages": "сообщений",

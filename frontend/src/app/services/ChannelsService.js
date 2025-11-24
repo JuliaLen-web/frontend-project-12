@@ -1,4 +1,4 @@
-import { api } from './api';
+import { api, socket } from './api';
 
 const channelAPI = api.injectEndpoints({
   tagTypes: ['Channels'],
@@ -9,6 +9,24 @@ const channelAPI = api.injectEndpoints({
         method: 'GET',
       }),
       providesTags: ['Channels'],
+      async onCacheEntryAdded(
+        arg,
+        { updateCachedData },
+      ) {
+        socket.on('newChannel', (newChannel) => {
+          updateCachedData((draftChannels) => {
+            draftChannels.push(newChannel);
+          });
+        });
+        socket.on('removeChannel', (deletedChannel) => {
+          updateCachedData((draftChannels) => draftChannels?.filter((channel) => channel.id !== deletedChannel.id));
+        });
+        socket.on('renameChannel', (editedChannel) => {
+          updateCachedData((draftChannels) => {
+            draftChannels?.map((channel) => (channel.id === editedChannel.id ? channel.name = editedChannel.name : channel));
+          });
+        });
+      },
     }),
     addChannel: builder.mutation({
       query: (newChannel) => ({
@@ -16,18 +34,6 @@ const channelAPI = api.injectEndpoints({
         method: 'POST',
         body: newChannel,
       }),
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        try {
-          const { data: addedChannel } = await queryFulfilled;
-          dispatch(
-            api.util.updateQueryData('getChannels', undefined, (draftChannels) => {
-              draftChannels?.push(addedChannel);
-            }),
-          );
-        } catch (e) {
-          dispatch(api.util.invalidateTags(['Channels']));
-        }
-      },
     }),
     editChannel: builder.mutation({
       query: ({ name, id }) => ({
@@ -35,34 +41,12 @@ const channelAPI = api.injectEndpoints({
         method: 'PATCH',
         body: { name },
       }),
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        try {
-          const { data: editedChannel } = await queryFulfilled;
-          dispatch(
-            api.util.updateQueryData('getChannels', undefined, (draftChannels) => {
-              draftChannels?.map((channel) => (channel.id === editedChannel.id ? channel.name = editedChannel.name : channel));
-            }),
-          );
-        } catch (e) {
-          dispatch(api.util.invalidateTags(['Channels']));
-        }
-      },
     }),
     removeChannel: builder.mutation({
       query: (id) => ({
         url: `/channels/${id}`,
         method: 'DELETE',
       }),
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        try {
-          const { data: deletedChannel } = await queryFulfilled;
-          dispatch(
-            api.util.updateQueryData('getChannels', undefined, (draftChannels) => draftChannels?.filter((channel) => channel.id !== deletedChannel.id)),
-          );
-        } catch (e) {
-          dispatch(api.util.invalidateTags(['Channels']));
-        }
-      },
     }),
   }),
 });

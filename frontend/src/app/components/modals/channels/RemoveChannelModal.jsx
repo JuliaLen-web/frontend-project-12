@@ -1,12 +1,18 @@
-import { FormGroup, Modal } from 'react-bootstrap';
+import { Button, FormGroup, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { useEffect, useRef } from 'react';
 import { useRemoveChannelMutation } from '../../../services/ChannelsService';
 
 const removeChannelModal = (props) => {
   const { onHide, modalInfo } = props;
   const { t } = useTranslation();
   const [removeChannel, { error, isLoading }] = useRemoveChannelMutation();
+  const submitRef = useRef();
+
+  useEffect(() => {
+    submitRef.current?.focus();
+  }, []);
 
   const handlerClick = async (e) => {
     e.preventDefault();
@@ -27,8 +33,9 @@ const removeChannelModal = (props) => {
 
       <Modal.Body>
         <form onSubmit={handlerClick}>
-          <FormGroup>
-            <input type="submit" className="btn btn-danger mt-2" disabled={isLoading} value={t('chat.delete')} />
+          <FormGroup className="d-flex gap-2 justify-content-end">
+            <Button type="button" className="btn btn-secondary" onClick={onHide}>{t('cancel')}</Button>
+            <input type="submit" className="btn btn-danger" disabled={isLoading} value={t('chat.delete')} />
           </FormGroup>
         </form>
       </Modal.Body>
