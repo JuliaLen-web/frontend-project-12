@@ -16,4 +16,14 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          i18next: ['i18next'],
+          socket: ['socket.io-client'],
+        },
+      },
+    },
+  },
 });
