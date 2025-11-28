@@ -1,6 +1,6 @@
 import { Route, Routes, Navigate } from 'react-router-dom';
 import LoginPage from './app/pages/login';
-import { PrivateOutlet } from './utils/PrivateOutlet';
+import { PrivateOutlet } from './PrivateOutlet';
 import SignupPage from './app/pages/signup';
 import NotFoundPage from './app/pages/404';
 

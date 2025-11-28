@@ -5,7 +5,7 @@ import MessageBox from './messages/MessageBox';
 const ChatPage = () => (
   <Layout>
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
-      <div className="row h-100 bg-white flex-md-row">
+      <div className="row h-100 bg-white position-relative">
         <ChannelsSidebar />
         <MessageBox />
       </div>

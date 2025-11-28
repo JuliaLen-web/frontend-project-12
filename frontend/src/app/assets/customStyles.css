@@ -1,0 +1,25 @@
+.sidebar {
+    transition: max-width .3s ease-in-out, opacity .3s ease-in-out;
+    max-width: 0;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    min-width: 200px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 6;
+
+    @media (min-width: 768px) {
+        position: relative;
+        right: auto;
+        min-width: auto;
+    }
+}
+
+.sidebar.showSidebar {
+    max-width: 300px;
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+}

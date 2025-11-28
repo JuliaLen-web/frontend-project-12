@@ -10,6 +10,7 @@
     "eslint-plugin-functional": "^4.2.1",
     "formik": "^2.2.9",
     "i18next": "^21.8.4",
+    "leo-profanity": "^1.8.0",
     "lodash.uniqueid": "^4.0.1",
     "react": "^18.1.0",
     "react-bootstrap": "^2.4.0",

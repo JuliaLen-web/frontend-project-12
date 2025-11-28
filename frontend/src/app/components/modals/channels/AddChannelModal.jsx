@@ -5,34 +5,35 @@ import { useFormik } from 'formik';
 import { useEffect, useRef } from 'react';
 import uniqueId from 'lodash.uniqueid';
 import { useDispatch } from 'react-redux';
-import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import { setActiveChannel } from '../../../slices/channelsSlice';
-import { useAddChannelMutation } from '../../../services/ChannelsService';
+import * as yup from 'yup';
+import { setActiveChannel } from '../../../slices/chatSlice';
+import { useAddChannelMutation, useGetChannelsQuery } from '../../../services/ChannelsService';
 
 const addChannelModal = (props) => {
   const { onHide } = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const [addChannel, { error, isLoading }] = useAddChannelMutation();
-
-  const validationSchema = yup.object().shape({
-    body: yup.string().trim().required(t('requiredField')).min(3, t('chat.minMax'))
-      .max(20, t('chat.minMax')),
-  });
+  const [addChannel, { isLoading }] = useAddChannelMutation();
+  const { data: channels } = useGetChannelsQuery();
 
   const formik = useFormik({
     initialValues: { body: '' },
-    validationSchema,
+    validationSchema: yup.object().shape({
+      body: yup.string().trim().required(t('requiredField')).min(3, t('chat.minMax'))
+        .max(20, t('chat.minMax'))
+        .notOneOf(channels.map((item) => item.name), t('chat.alreadyExist')),
+    }),
+    validateOnChange: false,
     onSubmit: async (values) => {
       try {
         const { data: newChannel } = await addChannel({ id: uniqueId(), name: values.body, removable: true });
-        dispatch(setActiveChannel(newChannel.data));
-        toast.success(`${newChannel.name} ${t('chat.channelCreated')}`);
+        dispatch(setActiveChannel(newChannel));
+        toast.success(t('chat.addChannel.done'));
         onHide();
       } catch (e) {
-        toast.error(error.data.message);
+        toast.error(t('chat.addChannel.error'));
       }
     },
   });
@@ -45,7 +46,7 @@ const addChannelModal = (props) => {
   return (
     <Modal show>
       <Modal.Header closeButton onHide={onHide}>
-        <Modal.Title>{t('chat.addChannel')}</Modal.Title>
+        <Modal.Title>{t('chat.addChannel.do')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -68,7 +69,7 @@ const addChannelModal = (props) => {
           </FormGroup>
           <FormGroup className="d-flex gap-2 justify-content-end">
             <Button type="button" className="btn btn-secondary" onClick={onHide}>{t('cancel')}</Button>
-            <input className="btn btn-primary" type="submit" disabled={isLoading} value={t('chat.create')} />
+            <input className="btn btn-primary" type="submit" disabled={isLoading} value={t('chat.add')} />
           </FormGroup>
         </form>
       </Modal.Body>

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { useAddMessageMutation } from '../../../services/MessageService';
-import { selectorActiveChannel } from '../../../slices/channelsSlice';
+import { selectorActiveChannel } from '../../../slices/chatSlice';
 import { useAuth } from '../../../../hooks/useAuth';
 
 const MessageForm = () => {
@@ -13,7 +13,7 @@ const MessageForm = () => {
   const inputMessage = useRef();
   const activeChannel = useSelector(selectorActiveChannel);
 
-  const [addMessage, { error: addingMessageError, isLoading }] = useAddMessageMutation();
+  const [addMessage, { isLoading }] = useAddMessageMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -25,7 +25,7 @@ const MessageForm = () => {
         await addMessage({ body: values.message, channelId: activeChannel.id, username: auth.user });
         values.message = '';
       } catch (e) {
-        toast.error(addingMessageError.data.message);
+        toast.error('Не удалиось отправить сообщение');
       }
     },
   });
@@ -35,7 +35,7 @@ const MessageForm = () => {
   }, [activeChannel]);
 
   return (
-    <div className="mt-auto px-5 py-3">
+    <div className="mt-auto px-md-5 py-md-3 px-2 py-2">
       <form onSubmit={formik.handleSubmit} noValidate="" className="py-1 border rounded-2">
         <div className="input-group has-validation">
           <input

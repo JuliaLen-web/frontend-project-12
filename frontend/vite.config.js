@@ -20,8 +20,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          i18next: ['i18next'],
-          socket: ['socket.io-client'],
+          utilities: ['i18next', 'socket.io-client', 'leo-profanity', 'react-toastify', 'yup', 'formik'],
         },
       },
     },
