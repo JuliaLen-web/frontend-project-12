@@ -41,9 +41,10 @@ const LoginPage = () => {
         const userInfo = await logIn(values).unwrap();
         dispatch(setCredentials(userInfo));
         navigate('/');
+        toast.success(t('login.success'));
       } catch (e) {
-        toast.error(loginError.data.message);
         inputRef.current?.select();
+        toast.error(t('login.error'));
       }
     },
   });
@@ -91,7 +92,7 @@ const LoginPage = () => {
               <p className="text-danger">{formik.errors.password}</p>
             )}
           </Form.Group>
-          {hasLoginError && loginError && <p className="text-danger">{loginError.data.message}</p>}
+          {hasLoginError && loginError && <p className="text-danger">{t('login.error')}</p>}
           <Button type="submit" className="btn btn-primary" disabled={isLoadingLogin || !formik.isValid}>{t('login.title')}</Button>
         </Form>
       </div>

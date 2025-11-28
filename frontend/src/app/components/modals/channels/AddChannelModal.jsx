@@ -28,7 +28,7 @@ const addChannelModal = (props) => {
     validateOnChange: false,
     onSubmit: async (values) => {
       try {
-        const { data: newChannel } = await addChannel({ id: uniqueId(), name: values.body, removable: true });
+        const newChannel = await addChannel({ id: uniqueId(), name: values.body, removable: true }).unwrap();
         dispatch(setActiveChannel(newChannel));
         toast.success(t('chat.addChannel.done'));
         onHide();

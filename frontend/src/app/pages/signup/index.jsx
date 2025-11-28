@@ -38,7 +38,16 @@ const SignupPage = () => {
       confirmPassword: '',
     },
     validationSchema,
-    onSubmit: (values) => signUp(values),
+    onSubmit: async (values) => {
+      try {
+        const signup = await signUp(values).unwrap();
+        console.log(signup);
+        toast.success(t('signup.success'));
+      } catch (e) {
+        inputRef.current?.select();
+        toast.error(t('signup.error'));
+      }
+    },
   });
 
   useEffect(() => {
@@ -47,13 +56,6 @@ const SignupPage = () => {
       navigation('/');
     }
   }, [newUser]);
-
-  useEffect(() => {
-    if (hasSignupError) {
-      inputRef.current?.select();
-      toast.error(signupError.data.message);
-    }
-  }, [hasSignupError]);
 
   return (
     <Layout>
@@ -107,7 +109,7 @@ const SignupPage = () => {
             <Form.Label htmlFor="confirmPassword">{t('confirmPassword')}</Form.Label>
             {formik.errors.confirmPassword && <p className="text-danger">{formik.errors.confirmPassword}</p>}
           </Form.Group>
-          {hasSignupError && signupError.data.message && <span className="text-danger">{signupError.data.message}</span>}
+          {hasSignupError && signupError.data.message && <span className="text-danger">{t('signup.error')}</span>}
 
           <Button type="submit" className="btn btn-primary" disabled={isLoading || !formik.isValid}>{t('signup.title')}</Button>
         </Form>
