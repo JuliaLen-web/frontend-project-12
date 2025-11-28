@@ -6,10 +6,16 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Provider } from 'react-redux';
 import './i18n';
 import { Bounce, ToastContainer } from 'react-toastify';
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 import App from './App.jsx';
 import { store } from './app/store';
 
 const root = createRoot(document.getElementById('root'));
+
+const rollbarConfig = {
+  accessToken: '96d1a94dd5ca4d1da2901655829fb0d8',
+  environment: 'testenv',
+};
 
 root.render(
   <StrictMode>
@@ -24,9 +30,13 @@ root.render(
         theme="light"
         transition={Bounce}
       />
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <RollbarProvider config={rollbarConfig}>
+        <ErrorBoundary>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ErrorBoundary>
+      </RollbarProvider>
     </Provider>
   </StrictMode>,
 );

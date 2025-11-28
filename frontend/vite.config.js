@@ -20,7 +20,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          utilities: ['i18next', 'socket.io-client', 'leo-profanity', 'react-toastify', 'yup', 'formik'],
+          utilities: ['i18next', 'socket.io-client', 'leo-profanity', 'react-toastify', 'yup', 'formik', '@rollbar/react', 'rollbar'],
         },
       },
     },
