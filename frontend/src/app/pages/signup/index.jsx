@@ -1,35 +1,35 @@
-import { useFormik } from 'formik';
-import { useEffect, useRef } from 'react';
-import { Button, Form } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import * as yup from 'yup';
-import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
-import { useSignUpMutation } from '../../services/SignupService';
-import { setCredentials } from '../../slices/authSlice';
-import Layout from '../../components/Layout';
+import { useFormik } from 'formik'
+import { useEffect, useRef } from 'react'
+import { Button, Form } from 'react-bootstrap'
+import { Link, useNavigate } from 'react-router-dom'
+import * as yup from 'yup'
+import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
+import { useSignUpMutation } from '../../services/SignupService'
+import { setCredentials } from '../../slices/authSlice'
+import Layout from '../../components/Layout'
 
 const SignupPage = () => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const navigation = useNavigate();
-  const inputRef = useRef();
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const navigation = useNavigate()
+  const inputRef = useRef()
 
   const [signUp, {
     isError: hasSignupError, error: signupError, isLoading, data: newUser,
-  }] = useSignUpMutation();
+  }] = useSignUpMutation()
 
   const validationSchema = yup.object().shape({
-    username: yup.string().trim().required(t('requiredField')).min(3, t('minCount', { count: 3 }))
-      .max(20),
+    username: yup.string().trim().required(t('requiredField')).min(3, t('chat.minMax'))
+      .max(20, t('chat.minMax')),
     password: yup.string().required(t('requiredField')).min(6, t('minCount', { count: 6 })),
     confirmPassword: yup.string()
       .oneOf(
         [yup.ref('password'), null],
         t('notMatchWithPassword'),
       ),
-  });
+  })
 
   const formik = useFormik({
     initialValues: {
@@ -40,22 +40,24 @@ const SignupPage = () => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const signup = await signUp(values).unwrap();
-        console.log(signup);
-        toast.success(t('signup.success'));
-      } catch (e) {
-        inputRef.current?.select();
-        toast.error(t('signup.error'));
+        const signup = await signUp(values).unwrap()
+        console.log(signup)
+        toast.success(t('signup.success'))
+      }
+      catch (e) {
+        console.error(e)
+        inputRef.current?.select()
+        // toast.error(t('signup.error'));
       }
     },
-  });
+  })
 
   useEffect(() => {
     if (newUser) {
-      dispatch(setCredentials(newUser));
-      navigation('/');
+      dispatch(setCredentials(newUser))
+      navigation('/')
     }
-  }, [newUser]);
+  }, [newUser])
 
   return (
     <Layout>
@@ -111,7 +113,7 @@ const SignupPage = () => {
           </Form.Group>
           {hasSignupError && signupError.data.message && <span className="text-danger">{t('signup.error')}</span>}
 
-          <Button type="submit" className="btn btn-primary" disabled={isLoading || !formik.isValid}>{t('signup.title')}</Button>
+          <Button type="submit" className="btn btn-primary" disabled={isLoading}>{t('signup.title')}</Button>
         </Form>
       </div>
       <div>
@@ -120,7 +122,7 @@ const SignupPage = () => {
         <Link to="/login">{t('login.title')}</Link>
       </div>
     </Layout>
-  );
-};
+  )
+}
 
-export default SignupPage;
+export default SignupPage

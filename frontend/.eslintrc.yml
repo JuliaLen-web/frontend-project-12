@@ -24,6 +24,13 @@ plugins:
   - functional
 
 rules:
+  no-extra-semi: 'error'
+  semi: ['error', 'never']
+  arrow-parens: ["error", "as-needed", {
+    "requireForBlockBody": true
+  }]
+  brace-style: ["error", "stroustrup"]
+  multiline-ternary: ['error', 'always']
   import/extensions: 0
   import/no-unresolved: 0
   react/prop-types: 0

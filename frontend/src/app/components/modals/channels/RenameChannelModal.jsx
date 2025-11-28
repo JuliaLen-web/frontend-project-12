@@ -1,21 +1,21 @@
 import {
-  Button, FormControl, FormGroup, Modal,
-} from 'react-bootstrap';
-import { useFormik } from 'formik';
-import { toast } from 'react-toastify';
-import { useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
-import * as yup from 'yup';
-import { useEditChannelMutation, useGetChannelsQuery } from '../../../services/ChannelsService';
-import { setActiveChannel } from '../../../slices/chatSlice';
+  Button, Form, FormControl, FormGroup, Modal,
+} from 'react-bootstrap'
+import { useFormik } from 'formik'
+import { toast } from 'react-toastify'
+import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
+import * as yup from 'yup'
+import { useEditChannelMutation, useGetChannelsQuery } from '../../../services/ChannelsService'
+import { setActiveChannel } from '../../../slices/chatSlice'
 
 const renameChannelModal = (props) => {
-  const { onHide, modalInfo } = props;
-  const { t } = useTranslation();
-  const [editChannel, { isLoading }] = useEditChannelMutation();
-  const dispatch = useDispatch();
-  const { data: channels } = useGetChannelsQuery();
+  const { onHide, modalInfo } = props
+  const { t } = useTranslation()
+  const [editChannel, { isLoading }] = useEditChannelMutation()
+  const dispatch = useDispatch()
+  const { data: channels } = useGetChannelsQuery()
 
   const f = useFormik({
     enableReinitialize: true,
@@ -23,26 +23,27 @@ const renameChannelModal = (props) => {
     validationSchema: yup.object().shape({
       body: yup.string().trim().required(t('requiredField')).min(3, t('chat.minMax'))
         .max(20, t('chat.minMax'))
-        .notOneOf(channels.map((item) => item.name), t('chat.alreadyExist')),
+        .notOneOf(channels.map(item => item.name), t('chat.alreadyExist')),
     }),
-    validateOnChange: false,
     onSubmit: async (values) => {
       try {
-        const editedChannel = await editChannel({ name: values.body, id: modalInfo.item.id }).unwrap();
-        dispatch(setActiveChannel(editedChannel));
-        toast.success(t('chat.renameChannel.done'));
-        onHide();
-      } catch (e) {
-        toast.error(t('chat.renameChannel.error'));
+        const editedChannel = await editChannel({ name: values.body, id: modalInfo.item.id }).unwrap()
+        dispatch(setActiveChannel(editedChannel))
+        toast.success(t('chat.renameChannel.done'))
+        onHide()
+      }
+      catch (e) {
+        console.error(e)
+        toast.error(t('chat.renameChannel.error'))
       }
     },
-  });
+  })
 
-  const inputRef = useRef();
+  const inputRef = useRef()
   useEffect(() => {
-    inputRef.current?.focus();
-    inputRef.current?.select();
-  }, []);
+    inputRef.current?.focus()
+    inputRef.current?.select()
+  }, [])
 
   return (
     <Modal show>
@@ -54,6 +55,7 @@ const renameChannelModal = (props) => {
         <form onSubmit={f.handleSubmit}>
           <FormGroup>
             <FormControl
+              id="renameChannel"
               data-testid="input-body"
               name="body"
               required
@@ -64,6 +66,7 @@ const renameChannelModal = (props) => {
               isInvalid={f.errors.body}
               autoComplete="off"
             />
+            <Form.Label htmlFor="renameChannel" class="visually-hidden">{t('chat.channelName')}</Form.Label>
             {f.errors.body && (
               <p className="text-danger">{f.errors.body}</p>
             )}
@@ -75,6 +78,6 @@ const renameChannelModal = (props) => {
         </form>
       </Modal.Body>
     </Modal>
-  );
-};
-export default renameChannelModal;
+  )
+}
+export default renameChannelModal

@@ -1,8 +1,8 @@
-import { api, socket } from './api';
+import { api, socket } from './api'
 
 const messageAPI = api.injectEndpoints({
   tagTypes: ['Messages'],
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     getMessages: builder.query({
       query: () => ({
         url: '/messages',
@@ -14,21 +14,21 @@ const messageAPI = api.injectEndpoints({
       ) {
         socket.on('newMessage', (newMessage) => {
           updateCachedData((draftMessages) => {
-            draftMessages.push(newMessage);
-          });
-        });
+            draftMessages.push(newMessage)
+          })
+        })
       },
     }),
     addMessage: builder.mutation({
-      query: (newMessage) => ({
+      query: newMessage => ({
         url: '/messages',
         method: 'POST',
         body: newMessage,
       }),
     }),
   }),
-});
+})
 
 export const {
   useGetMessagesQuery, useAddMessageMutation,
-} = messageAPI;
+} = messageAPI

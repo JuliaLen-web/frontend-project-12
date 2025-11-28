@@ -1,19 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit'
 
 const valueFromStorage = (type) => {
   if (localStorage.getItem('credentials')) {
     switch (type) {
       case 'user':
-        return JSON.parse(localStorage.getItem('credentials')).username;
+        return JSON.parse(localStorage.getItem('credentials')).username
       case 'token':
-        return JSON.parse(localStorage.getItem('credentials')).token;
+        return JSON.parse(localStorage.getItem('credentials')).token
       default:
-        return null;
+        return null
     }
-  } else {
-    return null;
   }
-};
+  else {
+    return null
+  }
+}
 
 const slice = createSlice({
   name: 'auth',
@@ -23,20 +24,20 @@ const slice = createSlice({
   },
   reducers: {
     setCredentials: (state, { payload }) => {
-      state.user = payload.username;
-      state.token = payload.token;
-      localStorage.setItem('credentials', JSON.stringify(payload));
+      state.user = payload.username
+      state.token = payload.token
+      localStorage.setItem('credentials', JSON.stringify(payload))
     },
     logout: (state) => {
-      state.user = null;
-      state.token = null;
-      localStorage.removeItem('credentials');
+      state.user = null
+      state.token = null
+      localStorage.removeItem('credentials')
     },
   },
-});
+})
 
-export const { setCredentials, logout } = slice.actions;
+export const { setCredentials, logout } = slice.actions
 
-export default slice.reducer;
+export default slice.reducer
 
-export const selectCurrentUser = (state) => state.auth.user;
+export const selectCurrentUser = state => state.auth.user

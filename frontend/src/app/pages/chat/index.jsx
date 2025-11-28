@@ -1,6 +1,6 @@
-import Layout from '../../components/Layout';
-import ChannelsSidebar from './channels/ChannelsSidebar';
-import MessageBox from './messages/MessageBox';
+import Layout from '../../components/Layout'
+import ChannelsSidebar from './channels/ChannelsSidebar'
+import MessageBox from './messages/MessageBox'
 
 const ChatPage = () => (
   <Layout>
@@ -11,6 +11,6 @@ const ChatPage = () => (
       </div>
     </div>
   </Layout>
-);
+)
 
-export default ChatPage;
+export default ChatPage

@@ -1,17 +1,17 @@
-import { Button } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { logout } from '../../slices/authSlice';
-import { useAuth } from '../../../hooks/useAuth';
+import { Button } from 'react-bootstrap'
+import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { logout } from '../../slices/authSlice'
+import { useAuth } from '../../../hooks/useAuth'
 
 const Header = () => {
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
-  const auth = useAuth();
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
+  const auth = useAuth()
 
   const logOutHandler = () => {
-    dispatch(logout());
-  };
+    dispatch(logout())
+  }
 
   return (
     <header className="d-flex w-100 position-fixed">
@@ -22,7 +22,7 @@ const Header = () => {
         </div>
       </nav>
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

@@ -4,6 +4,6 @@ const Main = ({ children }) => (
       {children}
     </div>
   </main>
-);
+)
 
-export default Main;
+export default Main

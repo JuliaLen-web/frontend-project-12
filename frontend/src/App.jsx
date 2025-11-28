@@ -1,8 +1,8 @@
-import { Route, Routes, Navigate } from 'react-router-dom';
-import LoginPage from './app/pages/login';
-import { PrivateOutlet } from './PrivateOutlet';
-import SignupPage from './app/pages/signup';
-import NotFoundPage from './app/pages/404';
+import { Route, Routes, Navigate } from 'react-router-dom'
+import LoginPage from './app/pages/login'
+import { PrivateOutlet } from './PrivateOutlet'
+import SignupPage from './app/pages/signup'
+import NotFoundPage from './app/pages/404'
 
 const App = () => (
   <Routes>
@@ -13,6 +13,6 @@ const App = () => (
 
     <Route path="*" element={<Navigate to="/" replace />} />
   </Routes>
-);
+)
 
-export default App;
+export default App

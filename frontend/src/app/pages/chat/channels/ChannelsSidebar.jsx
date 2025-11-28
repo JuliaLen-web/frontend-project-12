@@ -1,43 +1,43 @@
-import { PlusSquare } from 'react-bootstrap-icons';
-import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { PlusSquare } from 'react-bootstrap-icons'
+import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   Button, ButtonGroup, Dropdown,
-} from 'react-bootstrap';
-import { selectorActiveChannel, setActiveChannel, selectorIsOpenedSidebar } from '../../../slices/chatSlice';
-import { useGetChannelsQuery } from '../../../services/ChannelsService';
-import getModal from '../../../components/modals/channels/getModal';
-import '../../../assets/customStyles.css';
-import { useProfanityFilter } from '../../../../hooks/useProfanityFilter';
+} from 'react-bootstrap'
+import { selectorActiveChannel, setActiveChannel, selectorIsOpenedSidebar } from '../../../slices/chatSlice'
+import { useGetChannelsQuery } from '../../../services/ChannelsService'
+import getModal from '../../../components/modals/channels/getModal'
+import '../../../assets/customStyles.css'
+import { useProfanityFilter } from '../../../../hooks/useProfanityFilter'
 
 const renderModal = ({ modalInfo, hideModal }) => {
   if (!modalInfo.type) {
-    return null;
+    return null
   }
 
-  const Component = getModal(modalInfo.type);
-  return <Component modalInfo={modalInfo} onHide={hideModal} />;
-};
+  const Component = getModal(modalInfo.type)
+  return <Component modalInfo={modalInfo} onHide={hideModal} />
+}
 
 const ChannelsSidebar = () => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const { data: channels } = useGetChannelsQuery();
-  const { filter, check } = useProfanityFilter();
-  const activeChannel = useSelector(selectorActiveChannel);
-  const isOpenedSidebar = useSelector(selectorIsOpenedSidebar);
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const { data: channels } = useGetChannelsQuery()
+  const { filter, check } = useProfanityFilter()
+  const activeChannel = useSelector(selectorActiveChannel)
+  const isOpenedSidebar = useSelector(selectorIsOpenedSidebar)
 
-  const [modalInfo, setModalInfo] = useState({ type: null, item: null });
-  const hideModal = () => setModalInfo({ type: null, item: null });
-  const showModal = (type, item = null) => setModalInfo({ type, item });
+  const [modalInfo, setModalInfo] = useState({ type: null, item: null })
+  const hideModal = () => setModalInfo({ type: null, item: null })
+  const showModal = (type, item = null) => setModalInfo({ type, item })
 
   useEffect(() => {
     if (channels && channels.length) {
-      dispatch(setActiveChannel(channels[0]));
+      dispatch(setActiveChannel(channels[0]))
     }
-  }, [channels?.length > 0]);
+  }, [channels?.length > 0])
 
   return (
     <>
@@ -55,63 +55,73 @@ const ChannelsSidebar = () => {
             </button>
           </div>
           {channels
-              && (
-                <ul
-                  id="channels-box"
-                  className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block"
-                >
-                  {channels.map((channel) => (
-                    <li key={channel.id} className="nav-item w-100" onClick={() => dispatch(setActiveChannel(channel))}>
-                      {channel.removable
-                        ? (
-                          <Dropdown as={ButtonGroup} className="d-flex">
-                            <Button
-                              variant={activeChannel && activeChannel.id === channel.id ? 'secondary' : 'light'}
-                              className="w-100 rounded-0 text-start text-truncate"
-                            >
-                              {`# ${check(channel.name) ? filter(channel.name) : channel.name}`}
-                            </Button>
-
-                            <Dropdown.Toggle
-                              split
-                              variant={activeChannel && activeChannel.id === channel.id ? 'secondary' : 'light'}
-                              className="flex-grow-0 dropdown-toggle dropdown-toggle-split"
-                              id="dropdown-split-basic"
-                            />
-
-                            <Dropdown.Menu>
-                              <Dropdown.Item
-                                onClick={() => showModal('removing', channel)}
-                                href="#"
-                              >
-                                {t('chat.remove')}
-                              </Dropdown.Item>
-                              <Dropdown.Item
-                                onClick={() => showModal('renaming', channel)}
-                                href="#"
-                              >
-                                {t('chat.rename')}
-                              </Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
-                        )
-                        : (
-                          <button
-                            type="button"
-                            className={classNames('w-100 rounded-0 text-start btn', { 'btn-secondary': activeChannel && activeChannel.id === channel.id })}
+            && (
+              <ul
+                id="channels-box"
+                className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block"
+              >
+                {channels.map(channel => (
+                  <li key={channel.id} className="nav-item w-100" onClick={() => dispatch(setActiveChannel(channel))}>
+                    {channel.removable
+                      ? (
+                        <Dropdown as={ButtonGroup} className="d-flex">
+                          <Button
+                            variant={activeChannel && activeChannel.id === channel.id
+                              ? 'secondary'
+                              : 'light'}
+                            className="w-100 rounded-0 text-start text-truncate"
                           >
-                            {`# ${check(channel.name) ? filter(channel.name) : channel.name}`}
-                          </button>
-                        )}
-                    </li>
-                  ))}
-                </ul>
-              )}
+                            {`# ${check(channel.name)
+                              ? filter(channel.name)
+                              : channel.name}`}
+                          </Button>
+
+                          <Dropdown.Toggle
+                            split
+                            variant={activeChannel && activeChannel.id === channel.id
+                              ? 'secondary'
+                              : 'light'}
+                            className="flex-grow-0 dropdown-toggle dropdown-toggle-split"
+                            id="dropdown-split-basic"
+                          >
+                            <span className="visually-hidden">{t('chat.managementChannel')}</span>
+                          </Dropdown.Toggle>
+
+                          <Dropdown.Menu>
+                            <Dropdown.Item
+                              onClick={() => showModal('removing', channel)}
+                              href="#"
+                            >
+                              {t('chat.remove')}
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              onClick={() => showModal('renaming', channel)}
+                              href="#"
+                            >
+                              {t('chat.rename')}
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      )
+                      : (
+                        <button
+                          type="button"
+                          className={classNames('w-100 rounded-0 text-start btn', { 'btn-secondary': activeChannel && activeChannel.id === channel.id })}
+                        >
+                          {`# ${check(channel.name)
+                            ? filter(channel.name)
+                            : channel.name}`}
+                        </button>
+                      )}
+                  </li>
+                ))}
+              </ul>
+            )}
         </div>
       </div>
       {renderModal({ modalInfo, hideModal })}
     </>
-  );
-};
+  )
+}
 
-export default ChannelsSidebar;
+export default ChannelsSidebar

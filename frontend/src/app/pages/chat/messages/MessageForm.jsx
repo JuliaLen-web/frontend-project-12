@@ -1,38 +1,40 @@
-import { ArrowRightSquare } from 'react-bootstrap-icons';
-import { useFormik } from 'formik';
-import { toast } from 'react-toastify';
-import { useSelector } from 'react-redux';
-import { useEffect, useRef } from 'react';
-import { Spinner } from 'react-bootstrap';
-import { useAddMessageMutation } from '../../../services/MessageService';
-import { selectorActiveChannel } from '../../../slices/chatSlice';
-import { useAuth } from '../../../../hooks/useAuth';
+import { ArrowRightSquare } from 'react-bootstrap-icons'
+import { useFormik } from 'formik'
+import { toast } from 'react-toastify'
+import { useSelector } from 'react-redux'
+import { useEffect, useRef } from 'react'
+import { Spinner } from 'react-bootstrap'
+import { useAddMessageMutation } from '../../../services/MessageService'
+import { selectorActiveChannel } from '../../../slices/chatSlice'
+import { useAuth } from '../../../../hooks/useAuth'
 
 const MessageForm = () => {
-  const auth = useAuth();
-  const inputMessage = useRef();
-  const activeChannel = useSelector(selectorActiveChannel);
+  const auth = useAuth()
+  const inputMessage = useRef()
+  const activeChannel = useSelector(selectorActiveChannel)
 
-  const [addMessage, { isLoading }] = useAddMessageMutation();
+  const [addMessage, { isLoading }] = useAddMessageMutation()
 
   const formik = useFormik({
     initialValues: {
       message: '',
     },
     onSubmit: async (values) => {
-      inputMessage.current?.focus();
+      inputMessage.current?.focus()
       try {
-        await addMessage({ body: values.message, channelId: activeChannel.id, username: auth.user });
-        values.message = '';
-      } catch (e) {
-        toast.error('Не удалиось отправить сообщение');
+        await addMessage({ body: values.message, channelId: activeChannel.id, username: auth.user })
+        values.message = ''
+      }
+      catch (e) {
+        console.error(e)
+        toast.error('Не удалиось отправить сообщение')
       }
     },
-  });
+  })
 
   useEffect(() => {
-    inputMessage.current?.focus();
-  }, [activeChannel]);
+    inputMessage.current?.focus()
+  }, [activeChannel])
 
   return (
     <div className="mt-auto px-md-5 py-md-3 px-2 py-2">
@@ -57,6 +59,6 @@ const MessageForm = () => {
         </div>
       </form>
     </div>
-  );
-};
-export default MessageForm;
+  )
+}
+export default MessageForm

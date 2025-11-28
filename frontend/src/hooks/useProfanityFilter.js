@@ -1,17 +1,17 @@
-import { useCallback, useEffect } from 'react';
-import * as leoProfanity from 'leo-profanity';
+import { useCallback, useEffect } from 'react'
+import * as leoProfanity from 'leo-profanity'
 
 export const useProfanityFilter = () => {
   useEffect(() => {
-    leoProfanity.loadDictionary('ru');
-  }, []);
+    leoProfanity.loadDictionary('ru')
+  }, [])
 
-  const filter = useCallback((text, replacement = '*') => leoProfanity.clean(text, replacement), []);
+  const filter = useCallback((text, replacement = '*') => leoProfanity.clean(text, replacement), [])
 
-  const check = useCallback((text) => leoProfanity.check(text), []);
+  const check = useCallback(text => leoProfanity.check(text), [])
 
   return {
     filter,
     check,
-  };
-};
+  }
+}

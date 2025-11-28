@@ -1,8 +1,8 @@
-import { api, socket } from './api';
+import { api, socket } from './api'
 
 const channelAPI = api.injectEndpoints({
   tagTypes: ['Channels'],
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     getChannels: builder.query({
       query: () => ({
         url: '/channels',
@@ -15,21 +15,23 @@ const channelAPI = api.injectEndpoints({
       ) {
         socket.on('newChannel', (newChannel) => {
           updateCachedData((draftChannels) => {
-            draftChannels.push(newChannel);
-          });
-        });
+            draftChannels.push(newChannel)
+          })
+        })
         socket.on('removeChannel', (deletedChannel) => {
-          updateCachedData((draftChannels) => draftChannels?.filter((channel) => channel.id !== deletedChannel.id));
-        });
+          updateCachedData(draftChannels => draftChannels?.filter(channel => channel.id !== deletedChannel.id))
+        })
         socket.on('renameChannel', (editedChannel) => {
           updateCachedData((draftChannels) => {
-            draftChannels?.map((channel) => (channel.id === editedChannel.id ? channel.name = editedChannel.name : channel));
-          });
-        });
+            draftChannels?.map(channel => (channel.id === editedChannel.id
+              ? channel.name = editedChannel.name
+              : channel))
+          })
+        })
       },
     }),
     addChannel: builder.mutation({
-      query: (newChannel) => ({
+      query: newChannel => ({
         url: '/channels',
         method: 'POST',
         body: newChannel,
@@ -43,14 +45,14 @@ const channelAPI = api.injectEndpoints({
       }),
     }),
     removeChannel: builder.mutation({
-      query: (id) => ({
+      query: id => ({
         url: `/channels/${id}`,
         method: 'DELETE',
       }),
     }),
   }),
-});
+})
 
 export const {
   useGetChannelsQuery, useAddChannelMutation, useEditChannelMutation, useRemoveChannelMutation,
-} = channelAPI;
+} = channelAPI

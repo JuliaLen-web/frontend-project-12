@@ -1,15 +1,15 @@
-import { api } from './api';
+import { api } from './api'
 
 const loginAPI = api.injectEndpoints({
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     logIn: builder.mutation({
-      query: (data) => ({
+      query: data => ({
         url: '/login',
         method: 'POST',
         body: data,
       }),
     }),
   }),
-});
+})
 
-export const { useLogInMutation } = loginAPI;
+export const { useLogInMutation } = loginAPI
